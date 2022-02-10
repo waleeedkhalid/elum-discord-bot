@@ -26,6 +26,7 @@ const types_1 = require("./types");
 const buttonhandler_1 = __importDefault(require("./handlers/buttonhandler"));
 const fs_1 = __importDefault(require("fs"));
 const setrolehandler_1 = __importDefault(require("./handlers/setrolehandler"));
+const Guild_1 = require("./entities/Guild");
 const client = new discord_js_1.Client({ intents: 13827 });
 const token = process.env.CLIENT_TOKEN;
 const rest = new rest_1.REST({ version: '9' }).setToken(token);
@@ -77,3 +78,16 @@ client.on('interactionCreate', (interaction) => {
 client.on(types_1.CUSTOM_EVENT.COMMAND_INTERACTION, ticket_1.default);
 client.on(types_1.CUSTOM_EVENT.COMMAND_INTERACTION, setrolehandler_1.default);
 client.on(types_1.CUSTOM_EVENT.BUTTON_INTERACTION, buttonhandler_1.default);
+client.on('guildCreate', (guild) => __awaiter(void 0, void 0, void 0, function* () {
+    const GuildsRepo = yield (0, typeorm_1.getRepository)(Guild_1.Guilds);
+    const doc = yield GuildsRepo.findOne({ guildId: guild.id });
+    if (doc) {
+        console.log(`${guild.name} found!`);
+    }
+    else {
+        console.log(`Creating data....`);
+        const GuildCreateData = yield GuildsRepo.create({ guildId: guild.id.toString() });
+        yield GuildsRepo.save(GuildCreateData);
+        console.log(`Guild Data Created.`);
+    }
+}));

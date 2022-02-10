@@ -41,6 +41,10 @@ function createTicketChannel(interaction) {
                     id: id.toString(),
                     deny: ['VIEW_CHANNEL']
                 },
+                {
+                    id: "902199551228796978",
+                    allow: ['VIEW_CHANNEL', "SEND_MESSAGES"]
+                },
             ]
         });
     });
